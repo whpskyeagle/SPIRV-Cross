@@ -283,6 +283,7 @@ inline std::string convert_to_string(double t)
 struct Instruction
 {
 	Instruction(const std::vector<uint32_t> &spirv, uint32_t &index);
+	Instruction() = default;
 
 	uint16_t op;
 	uint16_t count;
@@ -1122,6 +1123,7 @@ public:
 	{
 		*this = std::move(other);
 	}
+
 	Variant &operator=(Variant &&other)
 	{
 		if (this != &other)
@@ -1166,14 +1168,17 @@ public:
 	{
 		return type;
 	}
+
 	uint32_t get_id() const
 	{
 		return holder ? holder->self : 0;
 	}
+
 	bool empty() const
 	{
 		return !holder;
 	}
+
 	void reset()
 	{
 		holder.reset();
