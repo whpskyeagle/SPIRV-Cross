@@ -247,6 +247,10 @@ void Parser::parse(const Instruction &instruction)
 
 		// Set the name of the entry point in case OpName is not provided later.
 		ir.set_name(ops[1], e.name);
+
+		// If we don't have an entry, make the first one our "default".
+		if (!ir.default_entry_point)
+			ir.default_entry_point = ops[1];
 		break;
 	}
 

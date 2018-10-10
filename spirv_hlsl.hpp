@@ -61,8 +61,8 @@ public:
 	{
 	}
 
-	CompilerHLSL(const uint32_t *ir, size_t size)
-	    : CompilerGLSL(ir, size)
+	CompilerHLSL(const uint32_t *ir_, size_t size)
+	    : CompilerGLSL(ir_, size)
 	{
 	}
 

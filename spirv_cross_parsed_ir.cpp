@@ -263,4 +263,75 @@ void ParsedIR::mark_used_as_array_length(uint32_t id)
 	}
 }
 
+Bitset ParsedIR::get_buffer_block_flags(const SPIRVariable &var) const
+{
+	auto &type = get<SPIRType>(var.basetype);
+	assert(type.basetype == SPIRType::Struct);
+
+	// Some flags like non-writable, non-readable are actually found
+	// as member decorations. If all members have a decoration set, propagate
+	// the decoration up as a regular variable decoration.
+	Bitset base_flags = meta[var.self].decoration.decoration_flags;
+
+	if (type.member_types.empty())
+		return base_flags;
+
+	Bitset all_members_flags = get_member_decoration_bitset(type.self, 0);
+	for (uint32_t i = 1; i < uint32_t(type.member_types.size()); i++)
+		all_members_flags.merge_and(get_member_decoration_bitset(type.self, i));
+
+	base_flags.merge_or(all_members_flags);
+	return base_flags;
+}
+
+const Bitset &ParsedIR::get_member_decoration_bitset(uint32_t id, uint32_t index) const
+{
+	auto &m = meta.at(id);
+	if (index >= m.members.size())
+	{
+		static const Bitset cleared = {};
+		return cleared;
+	}
+
+	return m.members[index].decoration_flags;
+}
+
+bool ParsedIR::has_decoration(uint32_t id, spv::Decoration decoration) const
+{
+	return get_decoration_bitset(id).get(decoration);
+}
+
+const Bitset &ParsedIR::get_decoration_bitset(uint32_t id) const
+{
+	auto &dec = meta.at(id).decoration;
+	return dec.decoration_flags;
+}
+
+void ParsedIR::set_member_decoration_string(uint32_t id, uint32_t index, spv::Decoration decoration,
+                                            const string &argument)
+{
+	meta.at(id).members.resize(max(meta[id].members.size(), size_t(index) + 1));
+	auto &dec = meta.at(id).members[index];
+	dec.decoration_flags.set(decoration);
+
+	switch (decoration)
+	{
+	case DecorationHlslSemanticGOOGLE:
+		dec.hlsl_semantic = argument;
+		break;
+
+	default:
+		break;
+	}
+}
+
+uint32_t ParsedIR::increase_bound_by(uint32_t incr_amount)
+{
+	auto curr_bound = ids.size();
+	auto new_bound = curr_bound + incr_amount;
+	ids.resize(new_bound);
+	meta.resize(new_bound);
+	return uint32_t(curr_bound);
+}
+
 }

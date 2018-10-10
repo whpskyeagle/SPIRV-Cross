@@ -39,8 +39,8 @@ public:
 		options.vulkan_semantics = true;
 	}
 
-	CompilerReflection(const uint32_t *ir, size_t word_count)
-	    : Parent(ir, word_count)
+	CompilerReflection(const uint32_t *ir_, size_t word_count)
+	    : Parent(ir_, word_count)
 	{
 		options.vulkan_semantics = true;
 	}

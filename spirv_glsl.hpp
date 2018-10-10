@@ -133,8 +133,8 @@ public:
 		init();
 	}
 
-	CompilerGLSL(const uint32_t *ir, size_t word_count)
-	    : Compiler(ir, word_count)
+	CompilerGLSL(const uint32_t *ir_, size_t word_count)
+	    : Compiler(ir_, word_count)
 	{
 		init();
 	}
@@ -586,10 +586,10 @@ protected:
 private:
 	void init()
 	{
-		if (source.known)
+		if (ir.source.known)
 		{
-			options.es = source.es;
-			options.version = source.version;
+			options.es = ir.source.es;
+			options.version = ir.source.version;
 		}
 	}
 };

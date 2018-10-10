@@ -31,8 +31,8 @@ public:
 	{
 	}
 
-	CompilerCPP(const uint32_t *ir, size_t word_count)
-	    : CompilerGLSL(ir, word_count)
+	CompilerCPP(const uint32_t *ir_, size_t word_count)
+	    : CompilerGLSL(ir_, word_count)
 	{
 	}
 

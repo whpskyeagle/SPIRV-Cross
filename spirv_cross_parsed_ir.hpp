@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SPIRV_CROSS_IR_HPP
-#define SRIRV_CROSS_IR_HPP
+#ifndef SPIRV_CROSS_PARSED_IR_HPP
+#define SPIRV_CROSS_PARSED_IR_HPP
 
 #include <vector>
 #include <unordered_map>
@@ -28,16 +28,6 @@ class ParsedIR
 {
 public:
 	void set_id_bounds(uint32_t bounds);
-
-	struct Source
-	{
-		uint32_t version = 0;
-		bool es = false;
-		bool known = false;
-		bool hlsl = false;
-
-		Source() = default;
-	};
 
 	std::vector<uint32_t> spirv;
 	std::vector<Variant> ids;
@@ -59,6 +49,16 @@ public:
 	std::unordered_map<uint32_t, SPIREntryPoint> entry_points;
 	uint32_t default_entry_point = 0;
 
+	struct Source
+	{
+		uint32_t version = 0;
+		bool es = false;
+		bool known = false;
+		bool hlsl = false;
+
+		Source() = default;
+	};
+
 	Source source;
 
 	void set_name(uint32_t id, const std::string &name);
@@ -70,6 +70,8 @@ public:
 	void set_member_decoration(uint32_t id, uint32_t index, spv::Decoration decoration, uint32_t argument = 0);
 	void set_member_decoration_string(uint32_t id, uint32_t index, spv::Decoration decoration,
 	                                  const std::string &argument);
+	const Bitset &get_member_decoration_bitset(uint32_t id, uint32_t index) const;
+	const Bitset &get_decoration_bitset(uint32_t id) const;
 	const std::string &get_name(uint32_t id) const;
 
 	void mark_used_as_array_length(uint32_t id);
@@ -79,6 +81,12 @@ public:
 private:
 	template <typename T>
 	T &get(uint32_t id)
+	{
+		return variant_get<T>(ids[id]);
+	}
+
+	template <typename T>
+	const T &get(uint32_t id) const
 	{
 		return variant_get<T>(ids[id]);
 	}
