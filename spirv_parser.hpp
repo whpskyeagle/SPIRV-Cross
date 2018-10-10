@@ -17,9 +17,9 @@
 #ifndef SPIRV_CROSS_PARSER_HPP
 #define SPIRV_CROSS_PARSER_HPP
 
-#include <vector>
-#include <stdint.h>
 #include "spirv_cross_parsed_ir.hpp"
+#include <stdint.h>
+#include <vector>
 
 namespace spirv_cross
 {
@@ -89,6 +89,6 @@ private:
 	bool variable_storage_is_aliased(const SPIRVariable &v) const;
 	void make_constant_null(uint32_t id, uint32_t type);
 };
-}
+} // namespace spirv_cross
 
 #endif

@@ -237,8 +237,9 @@ void Parser::parse(const Instruction &instruction)
 
 	case OpEntryPoint:
 	{
-		auto itr = ir.entry_points.insert(make_pair(ops[1], SPIREntryPoint(ops[1], static_cast<ExecutionModel>(ops[0]),
-		                                                                   extract_string(ir.spirv, instruction.offset + 2))));
+		auto itr =
+		    ir.entry_points.insert(make_pair(ops[1], SPIREntryPoint(ops[1], static_cast<ExecutionModel>(ops[0]),
+		                                                            extract_string(ir.spirv, instruction.offset + 2))));
 		auto &e = itr.first->second;
 
 		// Strings need nul-terminator and consume the whole word.
@@ -384,7 +385,7 @@ void Parser::parse(const Instruction &instruction)
 		uint32_t width = ops[1];
 		auto &type = set<SPIRType>(id);
 		type.basetype =
-				ops[2] ? (width > 32 ? SPIRType::Int64 : SPIRType::Int) : (width > 32 ? SPIRType::UInt64 : SPIRType::UInt);
+		    ops[2] ? (width > 32 ? SPIRType::Int64 : SPIRType::Int) : (width > 32 ? SPIRType::UInt64 : SPIRType::UInt);
 		type.width = width;
 		break;
 	}
@@ -751,8 +752,8 @@ void Parser::parse(const Instruction &instruction)
 		{
 			// Very specific error message, but seems to come up quite often.
 			SPIRV_CROSS_THROW(
-					"Cannot end a function before ending the current block.\n"
-					"Likely cause: If this SPIR-V was created from glslang HLSL, make sure the entry point is valid.");
+			    "Cannot end a function before ending the current block.\n"
+			    "Likely cause: If this SPIR-V was created from glslang HLSL, make sure the entry point is valid.");
 		}
 		current_function = nullptr;
 		break;
@@ -1028,4 +1029,4 @@ void Parser::make_constant_null(uint32_t id, uint32_t type)
 	}
 }
 
-}
+} // namespace spirv_cross

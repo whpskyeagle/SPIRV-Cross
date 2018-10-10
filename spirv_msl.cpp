@@ -5187,7 +5187,8 @@ std::string CompilerMSL::to_initializer_expression(const SPIRVariable &var)
 	// FIXME: We cannot handle non-constant arrays being initialized.
 	// We will need to inject spvArrayCopy here somehow ...
 	auto &type = get<SPIRType>(var.basetype);
-	if (ir.ids[var.initializer].get_type() == TypeConstant && (!type.array.empty() || type.basetype == SPIRType::Struct))
+	if (ir.ids[var.initializer].get_type() == TypeConstant &&
+	    (!type.array.empty() || type.basetype == SPIRType::Struct))
 		return constant_expression(get<SPIRConstant>(var.initializer));
 	else
 		return CompilerGLSL::to_initializer_expression(var);

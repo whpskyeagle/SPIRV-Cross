@@ -42,8 +42,8 @@ namespace spirv_cross
 #ifndef _MSC_VER
 [[noreturn]]
 #endif
-    inline void
-    report_and_abort(const std::string &msg)
+inline void
+report_and_abort(const std::string &msg)
 {
 #ifdef NDEBUG
 	(void)msg;
@@ -300,8 +300,11 @@ struct IVariant
 	uint32_t self = 0;
 };
 
-#define SPIRV_CROSS_DECLARE_CLONE(T) \
-	std::unique_ptr<IVariant> clone() override { return std::unique_ptr<IVariant>(new T(*this)); }
+#define SPIRV_CROSS_DECLARE_CLONE(T)                    \
+	std::unique_ptr<IVariant> clone() override          \
+	{                                                   \
+		return std::unique_ptr<IVariant>(new T(*this)); \
+	}
 
 enum Types
 {

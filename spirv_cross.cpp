@@ -15,9 +15,9 @@
  */
 
 #include "spirv_cross.hpp"
-#include "spirv_parser.hpp"
 #include "GLSL.std.450.h"
 #include "spirv_cfg.hpp"
+#include "spirv_parser.hpp"
 #include <algorithm>
 #include <cstring>
 #include <utility>
@@ -733,7 +733,8 @@ ShaderResources Compiler::get_shader_resources(const unordered_set<uint32_t> *ac
 		{
 			// There can only be one push constant block, but keep the vector in case this restriction is lifted
 			// in the future.
-			res.push_constant_buffers.push_back({ var.self, var.basetype, type.self, ir.meta[var.self].decoration.alias });
+			res.push_constant_buffers.push_back(
+			    { var.self, var.basetype, type.self, ir.meta[var.self].decoration.alias });
 		}
 		// Images
 		else if (type.storage == StorageClassUniformConstant && type.basetype == SPIRType::Image &&
@@ -2772,10 +2773,9 @@ const SPIREntryPoint &Compiler::get_entry_point(const std::string &name) const
 
 SPIREntryPoint &Compiler::get_first_entry_point(const std::string &name)
 {
-	auto itr =
-	    find_if(begin(ir.entry_points), end(ir.entry_points), [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool {
-		    return entry.second.orig_name == name;
-	    });
+	auto itr = find_if(
+	    begin(ir.entry_points), end(ir.entry_points),
+	    [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool { return entry.second.orig_name == name; });
 
 	if (itr == end(ir.entry_points))
 		SPIRV_CROSS_THROW("Entry point does not exist.");
@@ -2785,10 +2785,9 @@ SPIREntryPoint &Compiler::get_first_entry_point(const std::string &name)
 
 const SPIREntryPoint &Compiler::get_first_entry_point(const std::string &name) const
 {
-	auto itr =
-	    find_if(begin(ir.entry_points), end(ir.entry_points), [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool {
-		    return entry.second.orig_name == name;
-	    });
+	auto itr = find_if(
+	    begin(ir.entry_points), end(ir.entry_points),
+	    [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool { return entry.second.orig_name == name; });
 
 	if (itr == end(ir.entry_points))
 		SPIRV_CROSS_THROW("Entry point does not exist.");
@@ -2798,10 +2797,10 @@ const SPIREntryPoint &Compiler::get_first_entry_point(const std::string &name) c
 
 SPIREntryPoint &Compiler::get_entry_point(const std::string &name, ExecutionModel model)
 {
-	auto itr =
-	    find_if(begin(ir.entry_points), end(ir.entry_points), [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool {
-		    return entry.second.orig_name == name && entry.second.model == model;
-	    });
+	auto itr = find_if(begin(ir.entry_points), end(ir.entry_points),
+	                   [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool {
+		                   return entry.second.orig_name == name && entry.second.model == model;
+	                   });
 
 	if (itr == end(ir.entry_points))
 		SPIRV_CROSS_THROW("Entry point does not exist.");
@@ -2811,10 +2810,10 @@ SPIREntryPoint &Compiler::get_entry_point(const std::string &name, ExecutionMode
 
 const SPIREntryPoint &Compiler::get_entry_point(const std::string &name, ExecutionModel model) const
 {
-	auto itr =
-	    find_if(begin(ir.entry_points), end(ir.entry_points), [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool {
-		    return entry.second.orig_name == name && entry.second.model == model;
-	    });
+	auto itr = find_if(begin(ir.entry_points), end(ir.entry_points),
+	                   [&](const std::pair<uint32_t, SPIREntryPoint> &entry) -> bool {
+		                   return entry.second.orig_name == name && entry.second.model == model;
+	                   });
 
 	if (itr == end(ir.entry_points))
 		SPIRV_CROSS_THROW("Entry point does not exist.");

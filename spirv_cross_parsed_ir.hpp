@@ -17,10 +17,10 @@
 #ifndef SPIRV_CROSS_PARSED_IR_HPP
 #define SPIRV_CROSS_PARSED_IR_HPP
 
-#include <vector>
-#include <unordered_map>
-#include <stdint.h>
 #include "spirv_common.hpp"
+#include <stdint.h>
+#include <unordered_map>
+#include <vector>
 
 namespace spirv_cross
 {
@@ -91,6 +91,6 @@ private:
 		return variant_get<T>(ids[id]);
 	}
 };
-}
+} // namespace spirv_cross
 
 #endif

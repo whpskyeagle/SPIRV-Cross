@@ -334,4 +334,4 @@ uint32_t ParsedIR::increase_bound_by(uint32_t incr_amount)
 	return uint32_t(curr_bound);
 }
 
-}
+} // namespace spirv_cross
