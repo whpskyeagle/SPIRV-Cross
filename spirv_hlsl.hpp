@@ -56,7 +56,7 @@ public:
 		bool point_coord_compat = false;
 	};
 
-	CompilerHLSL(std::vector<uint32_t> spirv_)
+	explicit CompilerHLSL(std::vector<uint32_t> spirv_)
 	    : CompilerGLSL(move(spirv_))
 	{
 	}
@@ -66,12 +66,12 @@ public:
 	{
 	}
 
-	CompilerHLSL(const ParsedIR &ir_)
+	explicit CompilerHLSL(const ParsedIR &ir_)
 	    : CompilerGLSL(ir_)
 	{
 	}
 
-	CompilerHLSL(ParsedIR &&ir_)
+	explicit CompilerHLSL(ParsedIR &&ir_)
 	    : CompilerGLSL(std::move(ir_))
 	{
 	}

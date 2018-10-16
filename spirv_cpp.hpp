@@ -26,7 +26,7 @@ namespace spirv_cross
 class CompilerCPP : public CompilerGLSL
 {
 public:
-	CompilerCPP(std::vector<uint32_t> spirv_)
+	explicit CompilerCPP(std::vector<uint32_t> spirv_)
 	    : CompilerGLSL(move(spirv_))
 	{
 	}
@@ -36,12 +36,12 @@ public:
 	{
 	}
 
-	CompilerCPP(const ParsedIR &ir_)
+	explicit CompilerCPP(const ParsedIR &ir_)
 	    : CompilerGLSL(ir_)
 	{
 	}
 
-	CompilerCPP(ParsedIR &&ir_)
+	explicit CompilerCPP(ParsedIR &&ir_)
 	    : CompilerGLSL(std::move(ir_))
 	{
 	}

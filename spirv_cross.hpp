@@ -128,8 +128,8 @@ public:
 
 	// This is more modular. We can also consume a ParsedIR structure directly, either as a move, or copy.
 	// With copy, we can reuse the same parsed IR for multiple Compiler instances.
-	Compiler(const ParsedIR &ir);
-	Compiler(ParsedIR &&ir);
+	explicit Compiler(const ParsedIR &ir);
+	explicit Compiler(ParsedIR &&ir);
 
 	virtual ~Compiler() = default;
 

@@ -127,7 +127,7 @@ public:
 		remap_pls_variables();
 	}
 
-	CompilerGLSL(std::vector<uint32_t> spirv_)
+	explicit CompilerGLSL(std::vector<uint32_t> spirv_)
 	    : Compiler(move(spirv_))
 	{
 		init();
@@ -139,13 +139,13 @@ public:
 		init();
 	}
 
-	CompilerGLSL(const ParsedIR &ir_)
+	explicit CompilerGLSL(const ParsedIR &ir_)
 	    : Compiler(ir_)
 	{
 		init();
 	}
 
-	CompilerGLSL(ParsedIR &&ir_)
+	explicit CompilerGLSL(ParsedIR &&ir_)
 	    : Compiler(std::move(ir_))
 	{
 		init();

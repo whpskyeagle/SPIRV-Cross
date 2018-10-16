@@ -33,7 +33,7 @@ class CompilerReflection : public CompilerGLSL
 	using Parent = CompilerGLSL;
 
 public:
-	CompilerReflection(std::vector<uint32_t> spirv_)
+	explicit CompilerReflection(std::vector<uint32_t> spirv_)
 	    : Parent(move(spirv_))
 	{
 		options.vulkan_semantics = true;
@@ -45,13 +45,13 @@ public:
 		options.vulkan_semantics = true;
 	}
 
-	CompilerReflection(const ParsedIR &ir_)
+	explicit CompilerReflection(const ParsedIR &ir_)
 	    : CompilerGLSL(ir_)
 	{
 		options.vulkan_semantics = true;
 	}
 
-	CompilerReflection(ParsedIR &&ir_)
+	explicit CompilerReflection(ParsedIR &&ir_)
 	    : CompilerGLSL(std::move(ir_))
 	{
 		options.vulkan_semantics = true;
