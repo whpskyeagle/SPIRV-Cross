@@ -121,8 +121,15 @@ public:
 	friend class DominatorBuilder;
 
 	// The constructor takes a buffer of SPIR-V words and parses it.
-	Compiler(std::vector<uint32_t> ir);
+	// It will create its own parser, parse the SPIR-V and move the parsed IR
+	// as if you had called the constructors taking ParsedIR directly.
+	explicit Compiler(std::vector<uint32_t> ir);
 	Compiler(const uint32_t *ir, size_t word_count);
+
+	// This is more modular. We can also consume a ParsedIR structure directly, either as a move, or copy.
+	// With copy, we can reuse the same parsed IR for multiple Compiler instances.
+	Compiler(const ParsedIR &ir);
+	Compiler(ParsedIR &&ir);
 
 	virtual ~Compiler() = default;
 

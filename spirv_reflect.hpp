@@ -45,6 +45,18 @@ public:
 		options.vulkan_semantics = true;
 	}
 
+	CompilerReflection(const ParsedIR &ir_)
+		: CompilerGLSL(ir_)
+	{
+		options.vulkan_semantics = true;
+	}
+
+	CompilerReflection(ParsedIR &&ir_)
+		: CompilerGLSL(std::move(ir_))
+	{
+		options.vulkan_semantics = true;
+	}
+
 	void set_format(const std::string &format);
 	std::string compile() override;
 

@@ -68,6 +68,15 @@ public:
 #define SPIRV_CROSS_THROW(x) throw CompilerError(x)
 #endif
 
+// MSVC 2013 does not have noexcept. We need this for Variant to get move constructor to work correctly
+// instead of copy constructor.
+// MSVC 2013 ignores that move constructors cannot throw in std::vector, so just don't define it.
+#if defined(_MSC_VER) && _MSC_VER < 1900
+#define SPIRV_CROSS_NOEXCEPT
+#else
+#define SPIRV_CROSS_NOEXCEPT noexcept
+#endif
+
 #if __cplusplus >= 201402l
 #define SPIRV_CROSS_DEPRECATED(reason) [[deprecated(reason)]]
 #elif defined(__GNUC__)
@@ -282,13 +291,10 @@ inline std::string convert_to_string(double t)
 
 struct Instruction
 {
-	Instruction(const std::vector<uint32_t> &spirv, uint32_t &index);
-	Instruction() = default;
-
-	uint16_t op;
-	uint16_t count;
-	uint32_t offset;
-	uint32_t length;
+	uint16_t op = 0;
+	uint16_t count = 0;
+	uint32_t offset = 0;
+	uint32_t length = 0;
 };
 
 // Helper for Variant interface.
@@ -1150,7 +1156,9 @@ class Variant
 public:
 	// MSVC 2013 workaround, we shouldn't need these constructors.
 	Variant() = default;
-	Variant(Variant &&other) noexcept
+
+	// Marking custom move constructor as noexcept is important.
+	Variant(Variant &&other) SPIRV_CROSS_NOEXCEPT
 	{
 		*this = std::move(other);
 	}
@@ -1160,11 +1168,12 @@ public:
 		*this = variant;
 	}
 
-	Variant &operator=(Variant &&other) noexcept
+	// Marking custom move constructor as noexcept is important.
+	Variant &operator=(Variant &&other) SPIRV_CROSS_NOEXCEPT
 	{
 		if (this != &other)
 		{
-			holder = move(other.holder);
+			holder = std::move(other.holder);
 			type = other.type;
 			allow_type_rewrite = other.allow_type_rewrite;
 			other.type = TypeNone;
@@ -1172,6 +1181,9 @@ public:
 		return *this;
 	}
 
+	// This copy/clone should only be called in the Compiler constructor.
+	// If this is called inside ::compile(), we invalidate any references we took higher in the stack.
+	// This should never happen.
 	Variant &operator=(const Variant &other)
 	{
 		if (this != &other)

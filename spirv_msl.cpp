@@ -56,6 +56,34 @@ CompilerMSL::CompilerMSL(const uint32_t *ir_, size_t word_count, MSLVertexAttr *
 			resource_bindings.push_back(&p_res_bindings[i]);
 }
 
+CompilerMSL::CompilerMSL(const ParsedIR &ir_, MSLVertexAttr *p_vtx_attrs,
+                         size_t vtx_attrs_count, MSLResourceBinding *p_res_bindings,
+                         size_t res_bindings_count)
+	: CompilerGLSL(ir_)
+{
+	if (p_vtx_attrs)
+		for (size_t i = 0; i < vtx_attrs_count; i++)
+			vtx_attrs_by_location[p_vtx_attrs[i].location] = &p_vtx_attrs[i];
+
+	if (p_res_bindings)
+		for (size_t i = 0; i < res_bindings_count; i++)
+			resource_bindings.push_back(&p_res_bindings[i]);
+}
+
+CompilerMSL::CompilerMSL(ParsedIR &&ir_, MSLVertexAttr *p_vtx_attrs,
+                         size_t vtx_attrs_count, MSLResourceBinding *p_res_bindings,
+                         size_t res_bindings_count)
+	: CompilerGLSL(std::move(ir_))
+{
+	if (p_vtx_attrs)
+		for (size_t i = 0; i < vtx_attrs_count; i++)
+			vtx_attrs_by_location[p_vtx_attrs[i].location] = &p_vtx_attrs[i];
+
+	if (p_res_bindings)
+		for (size_t i = 0; i < res_bindings_count; i++)
+			resource_bindings.push_back(&p_res_bindings[i]);
+}
+
 void CompilerMSL::build_implicit_builtins()
 {
 	bool need_sample_pos = active_input_builtins.get(BuiltInSamplePosition);

@@ -66,6 +66,16 @@ public:
 	{
 	}
 
+	CompilerHLSL(const ParsedIR &ir_)
+		: CompilerGLSL(ir_)
+	{
+	}
+
+	CompilerHLSL(ParsedIR &&ir_)
+		: CompilerGLSL(std::move(ir_))
+	{
+	}
+
 	SPIRV_CROSS_DEPRECATED("CompilerHLSL::get_options() is obsolete, use get_hlsl_options() instead.")
 	const Options &get_options() const
 	{

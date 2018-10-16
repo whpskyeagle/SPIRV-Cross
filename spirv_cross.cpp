@@ -26,25 +26,6 @@ using namespace std;
 using namespace spv;
 using namespace spirv_cross;
 
-#define log(...) fprintf(stderr, __VA_ARGS__)
-
-Instruction::Instruction(const vector<uint32_t> &spirv, uint32_t &index)
-{
-	op = spirv[index] & 0xffff;
-	count = (spirv[index] >> 16) & 0xffff;
-
-	if (count == 0)
-		SPIRV_CROSS_THROW("SPIR-V instructions cannot consume 0 words. Invalid SPIR-V file.");
-
-	offset = index + 1;
-	length = count - 1;
-
-	index += count;
-
-	if (index > spirv.size())
-		SPIRV_CROSS_THROW("SPIR-V instruction goes out of bounds.");
-}
-
 Compiler::Compiler(vector<uint32_t> ir_)
 {
 	Parser parser(move(ir_));
@@ -57,6 +38,16 @@ Compiler::Compiler(const uint32_t *ir_, size_t word_count)
 	Parser parser(ir_, word_count);
 	parser.parse();
 	set_ir(move(parser.get_parsed_ir()));
+}
+
+Compiler::Compiler(const ParsedIR &ir_)
+{
+	set_ir(ir_);
+}
+
+Compiler::Compiler(ParsedIR &&ir_)
+{
+	set_ir(move(ir_));
 }
 
 void Compiler::set_ir(ParsedIR &&ir_)

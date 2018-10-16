@@ -139,6 +139,18 @@ public:
 		init();
 	}
 
+	CompilerGLSL(const ParsedIR &ir_)
+		: Compiler(ir_)
+	{
+		init();
+	}
+
+	CompilerGLSL(ParsedIR &&ir_)
+		: Compiler(std::move(ir_))
+	{
+		init();
+	}
+
 	// Deprecate this interface because it doesn't overload properly with subclasses.
 	// Requires awkward static casting, which was a mistake.
 	SPIRV_CROSS_DEPRECATED("get_options() is obsolete, use get_common_options() instead.")

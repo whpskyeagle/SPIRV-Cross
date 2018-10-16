@@ -24,6 +24,7 @@
 
 namespace spirv_cross
 {
+
 class ParsedIR
 {
 public:

@@ -36,6 +36,16 @@ public:
 	{
 	}
 
+	CompilerCPP(const ParsedIR &ir_)
+	    : CompilerGLSL(ir_)
+	{
+	}
+
+	CompilerCPP(ParsedIR &&ir_)
+	    : CompilerGLSL(std::move(ir_))
+	{
+	}
+
 	std::string compile() override;
 
 	// Sets a custom symbol name that can override
