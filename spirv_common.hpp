@@ -68,6 +68,8 @@ public:
 #define SPIRV_CROSS_THROW(x) throw CompilerError(x)
 #endif
 
+//#define SPIRV_CROSS_COPY_CONSTRUCTOR_SANITIZE
+
 // MSVC 2013 does not have noexcept. We need this for Variant to get move constructor to work correctly
 // instead of copy constructor.
 // MSVC 2013 ignores that move constructors cannot throw in std::vector, so just don't define it.
@@ -1186,6 +1188,9 @@ public:
 	// This should never happen.
 	Variant &operator=(const Variant &other)
 	{
+#ifdef SPIRV_CROSS_COPY_CONSTRUCTOR_SANITIZE
+		abort();
+#endif
 		if (this != &other)
 		{
 			holder.reset();
