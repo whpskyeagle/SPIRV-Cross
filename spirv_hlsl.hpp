@@ -67,12 +67,12 @@ public:
 	}
 
 	CompilerHLSL(const ParsedIR &ir_)
-		: CompilerGLSL(ir_)
+	    : CompilerGLSL(ir_)
 	{
 	}
 
 	CompilerHLSL(ParsedIR &&ir_)
-		: CompilerGLSL(std::move(ir_))
+	    : CompilerGLSL(std::move(ir_))
 	{
 	}
 

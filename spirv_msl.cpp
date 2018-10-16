@@ -56,10 +56,9 @@ CompilerMSL::CompilerMSL(const uint32_t *ir_, size_t word_count, MSLVertexAttr *
 			resource_bindings.push_back(&p_res_bindings[i]);
 }
 
-CompilerMSL::CompilerMSL(const ParsedIR &ir_, MSLVertexAttr *p_vtx_attrs,
-                         size_t vtx_attrs_count, MSLResourceBinding *p_res_bindings,
-                         size_t res_bindings_count)
-	: CompilerGLSL(ir_)
+CompilerMSL::CompilerMSL(const ParsedIR &ir_, MSLVertexAttr *p_vtx_attrs, size_t vtx_attrs_count,
+                         MSLResourceBinding *p_res_bindings, size_t res_bindings_count)
+    : CompilerGLSL(ir_)
 {
 	if (p_vtx_attrs)
 		for (size_t i = 0; i < vtx_attrs_count; i++)
@@ -70,10 +69,9 @@ CompilerMSL::CompilerMSL(const ParsedIR &ir_, MSLVertexAttr *p_vtx_attrs,
 			resource_bindings.push_back(&p_res_bindings[i]);
 }
 
-CompilerMSL::CompilerMSL(ParsedIR &&ir_, MSLVertexAttr *p_vtx_attrs,
-                         size_t vtx_attrs_count, MSLResourceBinding *p_res_bindings,
-                         size_t res_bindings_count)
-	: CompilerGLSL(std::move(ir_))
+CompilerMSL::CompilerMSL(ParsedIR &&ir_, MSLVertexAttr *p_vtx_attrs, size_t vtx_attrs_count,
+                         MSLResourceBinding *p_res_bindings, size_t res_bindings_count)
+    : CompilerGLSL(std::move(ir_))
 {
 	if (p_vtx_attrs)
 		for (size_t i = 0; i < vtx_attrs_count; i++)

@@ -140,13 +140,13 @@ public:
 	}
 
 	CompilerGLSL(const ParsedIR &ir_)
-		: Compiler(ir_)
+	    : Compiler(ir_)
 	{
 		init();
 	}
 
 	CompilerGLSL(ParsedIR &&ir_)
-		: Compiler(std::move(ir_))
+	    : Compiler(std::move(ir_))
 	{
 		init();
 	}
