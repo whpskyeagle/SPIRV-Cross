@@ -167,7 +167,7 @@ public:
 	uint32_t get_decoration(uint32_t id, spv::Decoration decoration) const;
 	const std::string &get_decoration_string(uint32_t id, spv::Decoration decoration) const;
 
-	// Removes the decoration for a an ID.
+	// Removes the decoration for an ID.
 	void unset_decoration(uint32_t id, spv::Decoration decoration);
 
 	// Gets the SPIR-V type associated with ID.

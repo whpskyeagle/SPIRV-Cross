@@ -62,18 +62,31 @@ public:
 
 	Source source;
 
+	// Decoration handling methods.
+	// Can be useful for simple "raw" reflection.
+	// However, most members are here because the Parser needs most of these,
+	// and might as well just have the whole suite of decoration/name handling in one place.
 	void set_name(uint32_t id, const std::string &name);
-	void set_member_name(uint32_t id, uint32_t index, const std::string &name);
-
+	const std::string &get_name(uint32_t id) const;
 	void set_decoration(uint32_t id, spv::Decoration decoration, uint32_t argument = 0);
 	void set_decoration_string(uint32_t id, spv::Decoration decoration, const std::string &argument);
 	bool has_decoration(uint32_t id, spv::Decoration decoration) const;
+	uint32_t get_decoration(uint32_t id, spv::Decoration decoration) const;
+	const std::string &get_decoration_string(uint32_t id, spv::Decoration decoration) const;
+	const Bitset &get_decoration_bitset(uint32_t id) const;
+	void unset_decoration(uint32_t id, spv::Decoration decoration);
+
+	// Decoration handling methods (for members of a struct).
+	void set_member_name(uint32_t id, uint32_t index, const std::string &name);
+	const std::string &get_member_name(uint32_t id, uint32_t index) const;
 	void set_member_decoration(uint32_t id, uint32_t index, spv::Decoration decoration, uint32_t argument = 0);
 	void set_member_decoration_string(uint32_t id, uint32_t index, spv::Decoration decoration,
 	                                  const std::string &argument);
+	uint32_t get_member_decoration(uint32_t id, uint32_t index, spv::Decoration decoration) const;
+	const std::string &get_member_decoration_string(uint32_t id, spv::Decoration decoration) const;
+	bool has_member_decoration(uint32_t id, uint32_t index, spv::Decoration decoration) const;
 	const Bitset &get_member_decoration_bitset(uint32_t id, uint32_t index) const;
-	const Bitset &get_decoration_bitset(uint32_t id) const;
-	const std::string &get_name(uint32_t id) const;
+	void unset_member_decoration(uint32_t id, uint32_t index, spv::Decoration decoration);
 
 	void mark_used_as_array_length(uint32_t id);
 	uint32_t increase_bound_by(uint32_t count);

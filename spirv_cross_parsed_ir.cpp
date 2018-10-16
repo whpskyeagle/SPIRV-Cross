@@ -67,6 +67,18 @@ const string &ParsedIR::get_name(uint32_t id) const
 	return meta[id].decoration.alias;
 }
 
+const string &ParsedIR::get_member_name(uint32_t id, uint32_t index) const
+{
+	auto &m = meta[id];
+	if (index >= m.members.size())
+	{
+		static string empty;
+		return empty;
+	}
+
+	return m.members[index].alias;
+}
+
 void ParsedIR::set_name(uint32_t id, const string &name)
 {
 	auto &str = meta[id].decoration.alias;
@@ -286,7 +298,7 @@ Bitset ParsedIR::get_buffer_block_flags(const SPIRVariable &var) const
 
 const Bitset &ParsedIR::get_member_decoration_bitset(uint32_t id, uint32_t index) const
 {
-	auto &m = meta.at(id);
+	auto &m = meta[id];
 	if (index >= m.members.size())
 	{
 		static const Bitset cleared = {};
@@ -301,23 +313,210 @@ bool ParsedIR::has_decoration(uint32_t id, spv::Decoration decoration) const
 	return get_decoration_bitset(id).get(decoration);
 }
 
+uint32_t ParsedIR::get_decoration(uint32_t id, Decoration decoration) const
+{
+	auto &dec = meta[id].decoration;
+	if (!dec.decoration_flags.get(decoration))
+		return 0;
+
+	switch (decoration)
+	{
+	case DecorationBuiltIn:
+		return dec.builtin_type;
+	case DecorationLocation:
+		return dec.location;
+	case DecorationComponent:
+		return dec.component;
+	case DecorationOffset:
+		return dec.offset;
+	case DecorationBinding:
+		return dec.binding;
+	case DecorationDescriptorSet:
+		return dec.set;
+	case DecorationInputAttachmentIndex:
+		return dec.input_attachment;
+	case DecorationSpecId:
+		return dec.spec_id;
+	case DecorationArrayStride:
+		return dec.array_stride;
+	case DecorationMatrixStride:
+		return dec.matrix_stride;
+	case DecorationIndex:
+		return dec.index;
+	default:
+		return 1;
+	}
+}
+
+const string &ParsedIR::get_decoration_string(uint32_t id, Decoration decoration) const
+{
+	auto &dec = meta[id].decoration;
+	static const string empty;
+
+	if (!dec.decoration_flags.get(decoration))
+		return empty;
+
+	switch (decoration)
+	{
+	case DecorationHlslSemanticGOOGLE:
+		return dec.hlsl_semantic;
+
+	default:
+		return empty;
+	}
+}
+
+void ParsedIR::unset_decoration(uint32_t id, Decoration decoration)
+{
+	auto &dec = meta[id].decoration;
+	dec.decoration_flags.clear(decoration);
+	switch (decoration)
+	{
+	case DecorationBuiltIn:
+		dec.builtin = false;
+		break;
+
+	case DecorationLocation:
+		dec.location = 0;
+		break;
+
+	case DecorationComponent:
+		dec.component = 0;
+		break;
+
+	case DecorationOffset:
+		dec.offset = 0;
+		break;
+
+	case DecorationBinding:
+		dec.binding = 0;
+		break;
+
+	case DecorationDescriptorSet:
+		dec.set = 0;
+		break;
+
+	case DecorationInputAttachmentIndex:
+		dec.input_attachment = 0;
+		break;
+
+	case DecorationSpecId:
+		dec.spec_id = 0;
+		break;
+
+	case DecorationHlslSemanticGOOGLE:
+		dec.hlsl_semantic.clear();
+		break;
+
+	case DecorationHlslCounterBufferGOOGLE:
+	{
+		auto &counter = meta[id].hlsl_magic_counter_buffer;
+		if (counter)
+		{
+			meta[counter].hlsl_is_magic_counter_buffer = false;
+			counter = 0;
+		}
+		break;
+	}
+
+	default:
+		break;
+	}
+}
+
+bool ParsedIR::has_member_decoration(uint32_t id, uint32_t index, Decoration decoration) const
+{
+	return get_member_decoration_bitset(id, index).get(decoration);
+}
+
+uint32_t ParsedIR::get_member_decoration(uint32_t id, uint32_t index, Decoration decoration) const
+{
+	auto &m = meta[id];
+	if (index >= m.members.size())
+		return 0;
+
+	auto &dec = m.members[index];
+	if (!dec.decoration_flags.get(decoration))
+		return 0;
+
+	switch (decoration)
+	{
+	case DecorationBuiltIn:
+		return dec.builtin_type;
+	case DecorationLocation:
+		return dec.location;
+	case DecorationComponent:
+		return dec.component;
+	case DecorationBinding:
+		return dec.binding;
+	case DecorationOffset:
+		return dec.offset;
+	case DecorationSpecId:
+		return dec.spec_id;
+	case DecorationIndex:
+		return dec.index;
+	default:
+		return 1;
+	}
+}
+
 const Bitset &ParsedIR::get_decoration_bitset(uint32_t id) const
 {
-	auto &dec = meta.at(id).decoration;
+	auto &dec = meta[id].decoration;
 	return dec.decoration_flags;
 }
 
 void ParsedIR::set_member_decoration_string(uint32_t id, uint32_t index, spv::Decoration decoration,
                                             const string &argument)
 {
-	meta.at(id).members.resize(max(meta[id].members.size(), size_t(index) + 1));
-	auto &dec = meta.at(id).members[index];
+	meta[id].members.resize(max(meta[id].members.size(), size_t(index) + 1));
+	auto &dec = meta[id].members[index];
 	dec.decoration_flags.set(decoration);
 
 	switch (decoration)
 	{
 	case DecorationHlslSemanticGOOGLE:
 		dec.hlsl_semantic = argument;
+		break;
+
+	default:
+		break;
+	}
+}
+
+void ParsedIR::unset_member_decoration(uint32_t id, uint32_t index, Decoration decoration)
+{
+	auto &m = meta[id];
+	if (index >= m.members.size())
+		return;
+
+	auto &dec = m.members[index];
+
+	dec.decoration_flags.clear(decoration);
+	switch (decoration)
+	{
+	case DecorationBuiltIn:
+		dec.builtin = false;
+		break;
+
+	case DecorationLocation:
+		dec.location = 0;
+		break;
+
+	case DecorationComponent:
+		dec.component = 0;
+		break;
+
+	case DecorationOffset:
+		dec.offset = 0;
+		break;
+
+	case DecorationSpecId:
+		dec.spec_id = 0;
+		break;
+
+	case DecorationHlslSemanticGOOGLE:
+		dec.hlsl_semantic.clear();
 		break;
 
 	default:
